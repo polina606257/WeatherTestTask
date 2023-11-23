@@ -3,7 +3,7 @@ package com.example.weathertesttask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.weathertesttask.ui.FiveDayWeatherFragment
+import com.example.weathertesttask.ui.HomePage.FiveDayWeatherFragment
 import com.example.weathertesttask.ui.Tab2Fragment
 import com.example.weathertesttask.ui.Tab3Fragment
 import com.example.weathertesttask.ui.Tab4Fragment
@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         replaceFragment(FiveDayWeatherFragment())
+
     }
 
     private fun replaceFragment(fragment: Fragment) {

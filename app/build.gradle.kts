@@ -48,7 +48,14 @@ dependencies {
     // Material Design Components
     implementation ("com.google.android.material:material:1.10.0")
 
-// Navigation component
+   // Navigation component
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.5")
+
+   //service location
+   implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.google.maps:google-maps-services:0.15.0")
+
+    //Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 }
