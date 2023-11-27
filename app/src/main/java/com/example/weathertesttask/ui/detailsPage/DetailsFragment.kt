@@ -22,6 +22,9 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val hourlyDayWeather = arguments?.getSerializable("dayWeather") as HourlyDayWeather
+        bindFields(hourlyDayWeather)
+    }
+    private fun bindFields(hourlyDayWeather: HourlyDayWeather) {
         binding.dateValue.text = hourlyDayWeather.dtTxt
         binding.cloudsValue.text = hourlyDayWeather.clouds.all.toString()
         binding.humidityValue.text = hourlyDayWeather.main.humidity.toString()
@@ -32,6 +35,5 @@ class DetailsFragment : Fragment() {
         binding.feelsLike.text = hourlyDayWeather.main.feelsLike.toString()
         binding.popValue.text = hourlyDayWeather.pop.toString()
         binding.sysValue.text = hourlyDayWeather.sys.pod
-
     }
 }

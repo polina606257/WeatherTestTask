@@ -22,16 +22,15 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Date" />
+                android:text="@string/date" />
 
             <TextView
                 android:id="@+id/date_value"
-                style="@style/WeatherParametersValueStyle"
-                android:text="Some text" />
+                style="@style/WeatherParametersValueStyle" />
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Clouds" />
+                android:text="@string/clouds" />
 
             <TextView
                 android:id="@+id/clouds_value"
@@ -39,7 +38,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Humidity" />
+                android:text="@string/humidity" />
 
             <TextView
                 android:id="@+id/humidity_value"
@@ -47,7 +46,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Pressure" />
+                android:text="@string/pressure" />
 
             <TextView
                 android:id="@+id/pressure_value"
@@ -55,7 +54,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Min temperature" />
+                android:text="@string/min_temperature" />
 
             <TextView
                 android:id="@+id/min_temperature_value"
@@ -63,7 +62,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Max temperature" />
+                android:text="@string/max_temperature" />
 
             <TextView
                 android:id="@+id/max_temperature_value"
@@ -71,7 +70,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Wind" />
+                android:text="@string/wind" />
 
             <TextView
                 android:id="@+id/wind_value"
@@ -79,7 +78,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="feelsLike" />
+                android:text="@string/feelslike" />
 
             <TextView
                 android:id="@+id/feelsLike"
@@ -87,7 +86,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="pop" />
+                android:text="@string/pop" />
 
             <TextView
                 android:id="@+id/pop_value"
@@ -95,7 +94,7 @@
 
             <TextView
                 style="@style/WeatherParametersStyle"
-                android:text="Sys" />
+                android:text="@string/sys" />
 
             <TextView
                 android:id="@+id/sys_value"
