@@ -1,8 +1,9 @@
 package com.example.weathertesttask.domain
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-data class DayWeather(
+data class HourlyDayWeather(
     val dt: Long,
     val main: MainWeatherInfo,
     val weather: List<WeatherDefinition>,
@@ -10,8 +11,8 @@ data class DayWeather(
     val wind: Wind,
     val visibility: Long,
     val pop: Double,
-    val rain: Rain,
+
     val sys: Sys,
     @SerializedName("dt_txt")
     val dtTxt: String,
-)
+) : Serializable

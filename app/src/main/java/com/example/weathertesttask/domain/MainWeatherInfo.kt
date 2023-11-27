@@ -36,10 +36,7 @@ data class Wind(
     val gust: Double,
 )
 
-data class Rain(
-    @SerializedName("3h")
-    val n3h: Double,
-)
+
 
 data class Sys(
     val pod: String,

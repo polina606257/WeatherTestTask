@@ -4,6 +4,6 @@ data class WeatherResponse(
     val cod: String,
     val message: Long,
     val cnt: Long,
-    val list: List<DayWeather>,
+    val list: List<HourlyDayWeather>,
     val city: City,
 )

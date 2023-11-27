@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/fiveDayWeatherFragment">
 
     <fragment
         android:id="@+id/fiveDayWeatherFragment"
         android:name="com.example.weathertesttask.ui.homePage.FiveDayWeatherFragment"
-        android:label="FiveDayWeatherFragment" />
+        android:label="FiveDayWeatherFragment" >
+        <action
+            android:id="@+id/action_fiveDayWeatherFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.weathertesttask.ui.detailsPage.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" />
+    <fragment
+        android:id="@+id/tab2Fragment"
+        android:name="com.example.weathertesttask.ui.Tab2Fragment"
+        android:label="fragment_tab2"
+        tools:layout="@layout/fragment_tab2" />
+    <fragment
+        android:id="@+id/tab3Fragment"
+        android:name="com.example.weathertesttask.ui.Tab3Fragment"
+        android:label="fragment_tab3"
+        tools:layout="@layout/fragment_tab3" />
+    <fragment
+        android:id="@+id/tab4Fragment"
+        android:name="com.example.weathertesttask.ui.Tab4Fragment"
+        android:label="fragment_tab4"
+        tools:layout="@layout/fragment_tab4" />
+    <fragment
+        android:id="@+id/tab5Fragment"
+        android:name="com.example.weathertesttask.ui.Tab5Fragment"
+        android:label="fragment_tab5"
+        tools:layout="@layout/fragment_tab5" />
 </navigation>
