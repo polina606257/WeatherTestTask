@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/fiveDayWeatherFragment"
-        android:name="com.example.weathertesttask.ui.HomePage.FiveDayWeatherFragment"
+        android:name="com.example.weathertesttask.ui.homePage.FiveDayWeatherFragment"
         android:label="FiveDayWeatherFragment" />
 </navigation>

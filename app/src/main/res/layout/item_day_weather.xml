@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Date" />
+
+            <TextView
+                android:id="@+id/date_value"
+                style="@style/WeatherParametersValueStyle"
+                android:text="Some text" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Clouds" />
+
+            <TextView
+                android:id="@+id/clouds_value"
+                style="@style/WeatherParametersValueStyle" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Humidity" />
+
+            <TextView
+                android:id="@+id/humidity_value"
+                style="@style/WeatherParametersValueStyle" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Pressure" />
+
+            <TextView
+                android:id="@+id/pressure_value"
+                style="@style/WeatherParametersValueStyle" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Min temperature" />
+
+            <TextView
+                android:id="@+id/min_temperature_value"
+                style="@style/WeatherParametersValueStyle" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Max temperature" />
+
+            <TextView
+                android:id="@+id/max_temperature_value"
+                style="@style/WeatherParametersValueStyle" />
+
+            <TextView
+                style="@style/WeatherParametersStyle"
+                android:text="Wind" />
+
+            <TextView
+                android:id="@+id/wind_value"
+                style="@style/WeatherParametersValueStyle" />
+        </GridLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
