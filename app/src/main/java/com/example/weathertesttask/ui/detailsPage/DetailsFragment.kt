@@ -29,5 +29,9 @@ class DetailsFragment : Fragment() {
         binding.minTemperatureValue.text = hourlyDayWeather.main.tempMin.toString()
         binding.maxTemperatureValue.text = hourlyDayWeather.main.tempMax.toString()
         binding.windValue.text = hourlyDayWeather.wind.speed.toString()
+        binding.feelsLike.text = hourlyDayWeather.main.feelsLike.toString()
+        binding.popValue.text = hourlyDayWeather.pop.toString()
+        binding.sysValue.text = hourlyDayWeather.sys.pod
+
     }
 }

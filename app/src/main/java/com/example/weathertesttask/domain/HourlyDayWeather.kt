@@ -11,7 +11,6 @@ data class HourlyDayWeather(
     val wind: Wind,
     val visibility: Long,
     val pop: Double,
-
     val sys: Sys,
     @SerializedName("dt_txt")
     val dtTxt: String,
