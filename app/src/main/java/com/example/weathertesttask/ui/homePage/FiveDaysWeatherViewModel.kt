@@ -39,26 +39,31 @@ class FiveDaysWeatherViewModel(
     private val _noData = MutableLiveData("")
     val noData: LiveData<String> = _noData
 
-    val REQUEST_CODE = 100
     private var latitude: Double? = null
     private var longitude: Double? = null
 
-    fun initViewModel(context: Context, activity: FragmentActivity) {
+    fun initViewModel(context: Context) {
         viewModelScope.launch {
             when (connectionDetector.isConnectingToInternet()) {
                 true -> {
                     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-                    findLocation(fusedLocationProviderClient, context,
-                        activity,
-                        onLocationFound = { getAndSaveApiData() }
-                    )
+                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        fusedLocationProviderClient.lastLocation
+                            .addOnSuccessListener(OnSuccessListener { location ->
+                                getLanAndLon(context, location, onLocationFound = {
+                                    getAndSaveApiData()
+                                })
+                            })
+                    }
                 }
 
                 else -> {
                     when (val dataResult =
                         withContext(Dispatchers.IO) { getForecastFromDatabaseUseCase() }) {
                         is DataResult.Success -> {
-                            if(dataResult.response.isEmpty()) {
+                            if (dataResult.response.isEmpty()) {
                                 _noData.value = "You need to connect to internet to get first data"
                             }
                             _fiveDaysForecast.value = dataResult.response
@@ -95,26 +100,6 @@ class FiveDaysWeatherViewModel(
         }
     }
 
-    private fun findLocation(
-        fusedLocationProviderClient: FusedLocationProviderClient,
-        context: Context,
-        activity: FragmentActivity,
-        onLocationFound: () -> Unit
-    ) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationProviderClient.lastLocation
-                .addOnSuccessListener(OnSuccessListener { location ->
-                    getLanAndLon(context, location, onLocationFound)
-                })
-        } else {
-            askForPermission(activity, context)
-        }
-    }
-
     private fun getLanAndLon(
         context: Context,
         location: Location,
@@ -132,12 +117,11 @@ class FiveDaysWeatherViewModel(
         }
     }
 
-    private fun askForPermission(activity: FragmentActivity, context: Context) {
-        ActivityCompat.requestPermissions(
-            activity,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE
-        )
-        initViewModel(context, activity)
-    }
+//    private fun askForPermission(activity: FragmentActivity, context: Context) {
+//        ActivityCompat.requestPermissions(
+//            activity,
+//            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//            REQUEST_CODE
+//        )
+//    }
 }
