@@ -14,5 +14,4 @@ class WeatherLocalDataSource(dayWeatherDao: DayWeatherDao) : DayWeatherDao {
     override fun insert(dayWeather: WeatherEntityForRoom) {
         localService.insert(dayWeather)
     }
-
 }

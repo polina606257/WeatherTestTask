@@ -7,5 +7,8 @@ class WeatherDataSource(weatherApiService: WeatherApiService) {
     private val remoteService: WeatherApiService by lazy {
         weatherApiService
     }
-    suspend fun getFiveDaysForecast(lat: Double, lon: Double) : WeatherResponse = remoteService.getFiveDaysForecast(lat, lon)
+
+    suspend fun getFiveDaysForecast(lat: Double, lon: Double): WeatherResponse {
+        return remoteService.getFiveDaysForecast(lat, lon)
+    }
 }

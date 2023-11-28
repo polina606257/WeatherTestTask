@@ -12,6 +12,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weathertesttask.data.DataResult
+import com.example.weathertesttask.data.remote.ConnectionDetector
+import com.example.weathertesttask.domain.HourlyDayWeather
 import com.example.weathertesttask.domain.WeatherEntityForRoom
 import com.example.weathertesttask.domain.WeatherResponse
 import com.example.weathertesttask.ui.usecases.GetFiveDaysForecastUseCase
@@ -28,7 +30,8 @@ import java.util.Locale
 class FiveDaysWeatherViewModel(
     val getFiveDaysForecastUseCase: GetFiveDaysForecastUseCase,
     val getForecastFromDatabaseUseCase: GetForecastFromDatabaseUseCase,
-    val saveDayWeatherToDatabaseUseCase: SaveDayWeatherToDatabaseUseCase
+    val saveDayWeatherToDatabaseUseCase: SaveDayWeatherToDatabaseUseCase,
+    val connectionDetector: ConnectionDetector
 ) : ViewModel() {
     private val _fiveDaysForecast = MutableLiveData<WeatherResponse?>()
     val fiveDaysForecast: LiveData<WeatherResponse?> = _fiveDaysForecast
@@ -39,33 +42,34 @@ class FiveDaysWeatherViewModel(
 
     fun initViewModel() {
         viewModelScope.launch {
-            if (latitude != null && longitude != null) {
-                when (val dataResult = getFiveDaysForecastUseCase(latitude!!, longitude!!)) {
-                    is DataResult.Success -> {
-                        _fiveDaysForecast.value = dataResult.response
-                        for (dayWeather in fiveDaysForecast.value!!.list) {
-                            val dayWeatherForSaving = WeatherEntityForRoom(
-                                dayWeather.dt,
-                                dayWeather.dtTxt,
-                                dayWeather.clouds.all,
-                                dayWeather.main.humidity,
-                                dayWeather.main.pressure,
-                                dayWeather.main.tempMin,
-                                dayWeather.main.tempMax,
-                                dayWeather.wind.speed,
-                                dayWeather.main.feelsLike,
-                                dayWeather.pop,
-                                dayWeather.sys.pod
-                            )
-                            withContext(Dispatchers.IO) {
-                                saveDayWeatherToDatabaseUseCase(dayWeatherForSaving)
+            if (connectionDetector.isConnectingToInternet()) {
+                if (latitude != null && longitude != null) {
+                    when (val dataResult = getFiveDaysForecastUseCase(latitude!!, longitude!!)) {
+                        is DataResult.Success -> {
+                            _fiveDaysForecast.value = dataResult.response
+                            for (dayWeather in fiveDaysForecast.value!!.list) {
+                                val dayWeatherForSaving = createWeatherEntityForRoom(dayWeather)
+                                withContext(Dispatchers.IO) {
+                                    saveDayWeatherToDatabaseUseCase(dayWeatherForSaving)
+                                }
                             }
                         }
+
+                        is DataResult.Error -> Log.i(
+                            "TAG", "Couldn't find any weather, error ${dataResult.error}"
+                        )
+                    }
+                }
+            } else {
+                when (val dataResult = getForecastFromDatabaseUseCase()) {
+                    is DataResult.Success -> {
+
                     }
 
-                    is DataResult.Error -> Log.i(
-                        "TAG", "Couldn't find any weather, error ${dataResult.error}"
-                    )
+                    is DataResult.Error -> {
+
+                        Log.i("TAG", "Couldn't find any weather, error ${dataResult.error}")
+                    }
                 }
             }
         }
@@ -107,4 +111,20 @@ class FiveDaysWeatherViewModel(
             Log.d("TAG", "Couldn't get location")
         }
     }
+}
+
+private fun createWeatherEntityForRoom(dayWeather: HourlyDayWeather): WeatherEntityForRoom {
+    return WeatherEntityForRoom(
+        dayWeather.dt,
+        dayWeather.dtTxt,
+        dayWeather.clouds.all,
+        dayWeather.main.humidity,
+        dayWeather.main.pressure,
+        dayWeather.main.tempMin,
+        dayWeather.main.tempMax,
+        dayWeather.wind.speed,
+        dayWeather.main.feelsLike,
+        dayWeather.pop,
+        dayWeather.sys.pod
+    )
 }
