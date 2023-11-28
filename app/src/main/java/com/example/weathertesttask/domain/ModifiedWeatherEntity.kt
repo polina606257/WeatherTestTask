@@ -2,9 +2,10 @@ package com.example.weathertesttask.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
-data class WeatherEntityForRoom (
+data class ModifiedWeatherEntity (
     @PrimaryKey
     val dt: Long,
     val dtTxt: String,
@@ -17,4 +18,4 @@ data class WeatherEntityForRoom (
     val feelsLike: Double,
     val pop: Double,
     val sys: String
-)
+) : Serializable

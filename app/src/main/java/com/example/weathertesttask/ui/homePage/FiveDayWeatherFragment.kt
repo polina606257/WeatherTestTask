@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weathertesttask.R
 import com.example.weathertesttask.databinding.FragmentFiveDayWeatherBinding
-import com.example.weathertesttask.domain.HourlyDayWeather
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,8 +51,8 @@ class FiveDayWeatherFragment : Fragment() {
             binding.apply {
                 if (weatherResponse != null) {
                     fiveDayWeatherAdapter =
-                        FiveDayWeatherAdapter(weatherResponse.list) { hourlyDayWeather: HourlyDayWeather ->
-                            onChooseDayClicked(hourlyDayWeather)
+                        FiveDayWeatherAdapter(weatherResponse) { dayWeather: ModifiedWeatherEntity ->
+                            onChooseDayClicked(dayWeather)
                         }
                     binding.forecastRecycler.adapter = fiveDayWeatherAdapter
                     binding.forecastRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -61,9 +61,9 @@ class FiveDayWeatherFragment : Fragment() {
         }
     }
 
-    private fun onChooseDayClicked(hourlyDayWeather: HourlyDayWeather) {
+    private fun onChooseDayClicked(dayWeather: ModifiedWeatherEntity) {
             val bundle = Bundle().apply {
-                putSerializable("dayWeather", hourlyDayWeather)
+                putSerializable("dayWeather", dayWeather)
             }
               findNavController().navigate(R.id.action_fiveDayWeatherFragment_to_detailsFragment, bundle)
     }

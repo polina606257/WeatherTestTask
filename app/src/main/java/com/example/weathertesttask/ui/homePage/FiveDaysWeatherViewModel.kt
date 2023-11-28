@@ -13,8 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weathertesttask.data.DataResult
 import com.example.weathertesttask.data.remote.ConnectionDetector
-import com.example.weathertesttask.domain.HourlyDayWeather
-import com.example.weathertesttask.domain.WeatherEntityForRoom
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
 import com.example.weathertesttask.domain.WeatherResponse
 import com.example.weathertesttask.ui.usecases.GetFiveDaysForecastUseCase
 import com.example.weathertesttask.ui.usecases.GetForecastFromDatabaseUseCase
@@ -33,8 +32,8 @@ class FiveDaysWeatherViewModel(
     val saveDayWeatherToDatabaseUseCase: SaveDayWeatherToDatabaseUseCase,
     val connectionDetector: ConnectionDetector
 ) : ViewModel() {
-    private val _fiveDaysForecast = MutableLiveData<WeatherResponse?>()
-    val fiveDaysForecast: LiveData<WeatherResponse?> = _fiveDaysForecast
+    private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>?>()
+    val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>?> = _fiveDaysForecast
 
     val REQUEST_CODE = 100
     private var latitude: Double? = null
@@ -47,10 +46,9 @@ class FiveDaysWeatherViewModel(
                     when (val dataResult = getFiveDaysForecastUseCase(latitude!!, longitude!!)) {
                         is DataResult.Success -> {
                             _fiveDaysForecast.value = dataResult.response
-                            for (dayWeather in fiveDaysForecast.value!!.list) {
-                                val dayWeatherForSaving = createWeatherEntityForRoom(dayWeather)
+                            for (dayWeather in fiveDaysForecast.value!!) {
                                 withContext(Dispatchers.IO) {
-                                    saveDayWeatherToDatabaseUseCase(dayWeatherForSaving)
+                                    saveDayWeatherToDatabaseUseCase(dayWeather)
                                 }
                             }
                         }
@@ -63,7 +61,7 @@ class FiveDaysWeatherViewModel(
             } else {
                 when (val dataResult = getForecastFromDatabaseUseCase()) {
                     is DataResult.Success -> {
-
+                        _fiveDaysForecast.value = dataResult.response
                     }
 
                     is DataResult.Error -> {
@@ -111,20 +109,4 @@ class FiveDaysWeatherViewModel(
             Log.d("TAG", "Couldn't get location")
         }
     }
-}
-
-private fun createWeatherEntityForRoom(dayWeather: HourlyDayWeather): WeatherEntityForRoom {
-    return WeatherEntityForRoom(
-        dayWeather.dt,
-        dayWeather.dtTxt,
-        dayWeather.clouds.all,
-        dayWeather.main.humidity,
-        dayWeather.main.pressure,
-        dayWeather.main.tempMin,
-        dayWeather.main.tempMax,
-        dayWeather.wind.speed,
-        dayWeather.main.feelsLike,
-        dayWeather.pop,
-        dayWeather.sys.pod
-    )
 }

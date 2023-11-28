@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weathertesttask.databinding.ItemDayWeatherBinding
-import com.example.weathertesttask.domain.HourlyDayWeather
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 class FiveDayWeatherAdapter(
-    val listHourlyDayWeather: List<HourlyDayWeather>,
-    val onChooseDayClicked: (hourlyDayWeather: HourlyDayWeather) -> Unit
+    val listHourlyDayWeather: List<ModifiedWeatherEntity>,
+    val onChooseDayClicked: (dayWeather: ModifiedWeatherEntity) -> Unit
 ) : RecyclerView.Adapter<FiveDayWeatherAdapter.ViewHolder>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -24,22 +24,22 @@ class FiveDayWeatherAdapter(
 
     override fun getItemCount() = listHourlyDayWeather.size
 
-    private fun getDayWeather(position: Int): HourlyDayWeather {
+    private fun getDayWeather(position: Int): ModifiedWeatherEntity {
         return listHourlyDayWeather[position]
     }
 
     inner class ViewHolder(val binding: ItemDayWeatherBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(hourlyDayWeather: HourlyDayWeather) {
-            binding.dateValue.text = hourlyDayWeather.dtTxt
-            binding.cloudsValue.text = hourlyDayWeather.clouds.all.toString()
-            binding.humidityValue.text = hourlyDayWeather.main.humidity.toString()
-            binding.pressureValue.text = hourlyDayWeather.main.pressure.toString()
-            binding.minTemperatureValue.text = hourlyDayWeather.main.tempMin.toString()
-            binding.maxTemperatureValue.text = hourlyDayWeather.main.tempMax.toString()
-            binding.windValue.text = hourlyDayWeather.wind.speed.toString()
+        fun bind(dayWeather: ModifiedWeatherEntity) {
+            binding.dateValue.text = dayWeather.dtTxt
+            binding.cloudsValue.text = dayWeather.clouds.toString()
+            binding.humidityValue.text = dayWeather.humidity.toString()
+            binding.pressureValue.text = dayWeather.pressure.toString()
+            binding.minTemperatureValue.text = dayWeather.tempMin.toString()
+            binding.maxTemperatureValue.text = dayWeather.tempMax.toString()
+            binding.windValue.text = dayWeather.wind.toString()
             binding.dayWeatherContainer.setOnClickListener {
-                onChooseDayClicked(hourlyDayWeather)
+                onChooseDayClicked(dayWeather)
             }
         }
     }

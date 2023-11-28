@@ -1,6 +1,7 @@
 package com.example.weathertesttask.data.remote
 
-import com.example.weathertesttask.domain.WeatherResponse
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
+import com.example.weathertesttask.utils.createWeatherEntityForRoom
 
 class WeatherDataSource(weatherApiService: WeatherApiService) {
 
@@ -8,7 +9,12 @@ class WeatherDataSource(weatherApiService: WeatherApiService) {
         weatherApiService
     }
 
-    suspend fun getFiveDaysForecast(lat: Double, lon: Double): WeatherResponse {
-        return remoteService.getFiveDaysForecast(lat, lon)
+    suspend fun getFiveDaysForecast(lat: Double, lon: Double): List<ModifiedWeatherEntity> {
+        val responseData = remoteService.getFiveDaysForecast(lat, lon)
+        val listOfModifiedWeather: MutableList<ModifiedWeatherEntity> = mutableListOf()
+        for (dayWeather in responseData.list) {
+            listOfModifiedWeather.add(createWeatherEntityForRoom(dayWeather))
+        }
+        return listOfModifiedWeather.toList()
     }
 }

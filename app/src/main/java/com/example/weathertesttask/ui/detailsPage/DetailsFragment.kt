@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.weathertesttask.databinding.FragmentDetailsBinding
-import com.example.weathertesttask.domain.HourlyDayWeather
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 class DetailsFragment : Fragment() {
     private lateinit var binding: FragmentDetailsBinding
@@ -21,19 +21,19 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val hourlyDayWeather = arguments?.getSerializable("dayWeather") as HourlyDayWeather
-        bindFields(hourlyDayWeather)
+        val dayWeather = arguments?.getSerializable("dayWeather") as ModifiedWeatherEntity
+        bindFields(dayWeather)
     }
-    private fun bindFields(hourlyDayWeather: HourlyDayWeather) {
-        binding.dateValue.text = hourlyDayWeather.dtTxt
-        binding.cloudsValue.text = hourlyDayWeather.clouds.all.toString()
-        binding.humidityValue.text = hourlyDayWeather.main.humidity.toString()
-        binding.pressureValue.text = hourlyDayWeather.main.pressure.toString()
-        binding.minTemperatureValue.text = hourlyDayWeather.main.tempMin.toString()
-        binding.maxTemperatureValue.text = hourlyDayWeather.main.tempMax.toString()
-        binding.windValue.text = hourlyDayWeather.wind.speed.toString()
-        binding.feelsLike.text = hourlyDayWeather.main.feelsLike.toString()
-        binding.popValue.text = hourlyDayWeather.pop.toString()
-        binding.sysValue.text = hourlyDayWeather.sys.pod
+    private fun bindFields(dayWeather: ModifiedWeatherEntity) {
+        binding.dateValue.text = dayWeather.dtTxt
+        binding.cloudsValue.text = dayWeather.clouds.toString()
+        binding.humidityValue.text = dayWeather.humidity.toString()
+        binding.pressureValue.text = dayWeather.pressure.toString()
+        binding.minTemperatureValue.text = dayWeather.tempMin.toString()
+        binding.maxTemperatureValue.text = dayWeather.tempMax.toString()
+        binding.windValue.text = dayWeather.wind.toString()
+        binding.feelsLike.text = dayWeather.feelsLike.toString()
+        binding.popValue.text = dayWeather.pop.toString()
+        binding.sysValue.text = dayWeather.sys
     }
 }

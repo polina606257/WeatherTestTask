@@ -1,8 +1,8 @@
 package com.example.weathertesttask.data.repository
 
-import com.example.weathertesttask.domain.WeatherEntityForRoom
+import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 interface LocalWeatherRepository {
-    suspend fun getAll(): List<WeatherEntityForRoom>
-    suspend fun insert(dayWeather: WeatherEntityForRoom)
+    suspend fun getAll(): List<ModifiedWeatherEntity>
+    suspend fun insert(dayWeather: ModifiedWeatherEntity)
 }

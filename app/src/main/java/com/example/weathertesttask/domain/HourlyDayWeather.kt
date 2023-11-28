@@ -16,4 +16,4 @@ data class HourlyDayWeather(
     val sys: Sys,
     @SerializedName("dt_txt")
     val dtTxt: String,
-) : Serializable
+)
