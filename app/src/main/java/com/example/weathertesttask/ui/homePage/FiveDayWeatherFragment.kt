@@ -42,7 +42,9 @@ class FiveDayWeatherFragment : Fragment() {
             onLocationFound = {
                 weatherViewModel.initViewModel()
             },
-            askForPermission = { askForPermission() }
+            askForPermission = {
+                askForPermission()
+            }
         )
 
         weatherViewModel.fiveDaysForecast.observe(viewLifecycleOwner) { weatherResponse ->

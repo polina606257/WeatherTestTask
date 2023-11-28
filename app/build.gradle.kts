@@ -22,6 +22,15 @@ android {
         buildConfigField("String", "API_KEY", "${properties["API_KEY"]}")
         buildConfigField("String", "BASE_URL", "${properties["BASE_URL"]}")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -77,4 +86,9 @@ dependencies {
     //Koin
     implementation ("io.insert-koin:koin-core:3.5.0")
     implementation ("io.insert-koin:koin-android:3.5.0")
+
+    //Room
+    implementation ("androidx.room:room-runtime:2.6.0")
+    kapt ("androidx.room:room-compiler:2.6.0")
+    implementation ("androidx.room:room-ktx:2.6.0")
 }
