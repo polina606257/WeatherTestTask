@@ -6,7 +6,9 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,17 +16,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.weathertesttask.data.DataResult
 import com.example.weathertesttask.data.remote.ConnectionDetector
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
-import com.example.weathertesttask.domain.WeatherResponse
 import com.example.weathertesttask.ui.usecases.GetFiveDaysForecastUseCase
 import com.example.weathertesttask.ui.usecases.GetForecastFromDatabaseUseCase
 import com.example.weathertesttask.ui.usecases.SaveDayWeatherToDatabaseUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-
 
 class FiveDaysWeatherViewModel(
     val getFiveDaysForecastUseCase: GetFiveDaysForecastUseCase,
@@ -32,52 +33,73 @@ class FiveDaysWeatherViewModel(
     val saveDayWeatherToDatabaseUseCase: SaveDayWeatherToDatabaseUseCase,
     val connectionDetector: ConnectionDetector
 ) : ViewModel() {
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>?>()
     val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>?> = _fiveDaysForecast
+    private val _noData = MutableLiveData("")
+    val noData: LiveData<String> = _noData
 
     val REQUEST_CODE = 100
     private var latitude: Double? = null
     private var longitude: Double? = null
 
-    fun initViewModel() {
+    fun initViewModel(context: Context, activity: FragmentActivity) {
         viewModelScope.launch {
-            if (connectionDetector.isConnectingToInternet()) {
-                if (latitude != null && longitude != null) {
-                    when (val dataResult = getFiveDaysForecastUseCase(latitude!!, longitude!!)) {
+            when (connectionDetector.isConnectingToInternet()) {
+                true -> {
+                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+                    findLocation(fusedLocationProviderClient, context,
+                        activity,
+                        onLocationFound = { getAndSaveApiData() }
+                    )
+                }
+
+                else -> {
+                    when (val dataResult =
+                        withContext(Dispatchers.IO) { getForecastFromDatabaseUseCase() }) {
                         is DataResult.Success -> {
-                            _fiveDaysForecast.value = dataResult.response
-                            for (dayWeather in fiveDaysForecast.value!!) {
-                                withContext(Dispatchers.IO) {
-                                    saveDayWeatherToDatabaseUseCase(dayWeather)
-                                }
+                            if(dataResult.response.isEmpty()) {
+                                _noData.value = "You need to connect to internet to get first data"
                             }
+                            _fiveDaysForecast.value = dataResult.response
                         }
 
-                        is DataResult.Error -> Log.i(
-                            "TAG", "Couldn't find any weather, error ${dataResult.error}"
-                        )
-                    }
-                }
-            } else {
-                when (val dataResult = getForecastFromDatabaseUseCase()) {
-                    is DataResult.Success -> {
-                        _fiveDaysForecast.value = dataResult.response
-                    }
-
-                    is DataResult.Error -> {
-
-                        Log.i("TAG", "Couldn't find any weather, error ${dataResult.error}")
+                        is DataResult.Error -> {
+                            Log.i("TAG", "Couldn't find any weather, error ${dataResult.error}")
+                        }
                     }
                 }
             }
         }
     }
 
-    fun findLocation(
+    private fun getAndSaveApiData() {
+        viewModelScope.launch {
+            if (latitude != null && longitude != null) {
+                when (val dataResult =
+                    getFiveDaysForecastUseCase(latitude!!, longitude!!)) {
+                    is DataResult.Success -> {
+                        _fiveDaysForecast.value = dataResult.response
+                        for (dayWeather in fiveDaysForecast.value!!) {
+                            withContext(Dispatchers.IO) {
+                                saveDayWeatherToDatabaseUseCase(dayWeather)
+                            }
+                        }
+                    }
+
+                    is DataResult.Error -> Log.i(
+                        "TAG", "Couldn't find any weather, error ${dataResult.error}"
+                    )
+                }
+            }
+        }
+    }
+
+    private fun findLocation(
         fusedLocationProviderClient: FusedLocationProviderClient,
         context: Context,
-        onLocationFound: () -> Unit,
-        askForPermission: () -> Unit
+        activity: FragmentActivity,
+        onLocationFound: () -> Unit
     ) {
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -86,17 +108,17 @@ class FiveDaysWeatherViewModel(
         ) {
             fusedLocationProviderClient.lastLocation
                 .addOnSuccessListener(OnSuccessListener { location ->
-                    getLanAndLon(context, onLocationFound, location)
+                    getLanAndLon(context, location, onLocationFound)
                 })
         } else {
-            askForPermission()
+            askForPermission(activity, context)
         }
     }
 
     private fun getLanAndLon(
         context: Context,
-        onLocationFound: () -> Unit,
-        location: Location
+        location: Location,
+        onLocationFound: () -> Unit
     ) {
         try {
             val geocoder = Geocoder(context, Locale.getDefault())
@@ -108,5 +130,14 @@ class FiveDaysWeatherViewModel(
         } catch (e: Exception) {
             Log.d("TAG", "Couldn't get location")
         }
+    }
+
+    private fun askForPermission(activity: FragmentActivity, context: Context) {
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
+        initViewModel(context, activity)
     }
 }
