@@ -4,7 +4,6 @@ import com.example.weathertesttask.domain.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-//https://api.openweathermap.org/data/2.5/
 interface WeatherApiService {
  @GET("forecast")
  suspend fun getFiveDaysForecast(@Query("lat") lat: Double, @Query("lon") lon: Double) : WeatherResponse

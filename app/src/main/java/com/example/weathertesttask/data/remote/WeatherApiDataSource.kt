@@ -3,7 +3,7 @@ package com.example.weathertesttask.data.remote
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 import com.example.weathertesttask.utils.createWeatherEntityForRoom
 
-class WeatherDataSource(weatherApiService: WeatherApiService) {
+class WeatherApiDataSource(weatherApiService: WeatherApiService) {
 
     private val remoteService: WeatherApiService by lazy {
         weatherApiService

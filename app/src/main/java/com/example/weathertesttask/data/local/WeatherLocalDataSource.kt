@@ -2,9 +2,9 @@ package com.example.weathertesttask.data.local
 
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
-class WeatherLocalDataSource(dayWeatherDao: DayWeatherDao) : DayWeatherDao {
-    private val localService: DayWeatherDao by lazy {
-        dayWeatherDao
+class WeatherLocalDataSource(weatherDao: WeatherDao) : WeatherDao {
+    private val localService: WeatherDao by lazy {
+        weatherDao
     }
 
     override fun getAll(): List<ModifiedWeatherEntity> {

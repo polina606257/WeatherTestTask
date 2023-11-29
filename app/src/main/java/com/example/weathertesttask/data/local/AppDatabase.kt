@@ -6,5 +6,5 @@ import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 @Database(entities = [ModifiedWeatherEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun dayWeatherDao(): DayWeatherDao
+    abstract fun dayWeatherDao(): WeatherDao
 }

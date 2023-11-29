@@ -18,11 +18,11 @@ import com.example.weathertesttask.databinding.FragmentFiveDayWeatherBinding
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FiveDayWeatherFragment : Fragment() {
+class ForecastFragment : Fragment() {
     private var _binding: FragmentFiveDayWeatherBinding? = null
     private val binding get() = _binding!!
-    private val weatherViewModel by viewModel<FiveDaysWeatherViewModel>()
-    private lateinit var fiveDayWeatherAdapter: FiveDayWeatherAdapter
+    private val weatherViewModel by viewModel<ForecastViewModel>()
+    private lateinit var forecastAdapter: ForecastAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +34,10 @@ class FiveDayWeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fiveDayWeatherAdapter = FiveDayWeatherAdapter { dayWeather: ModifiedWeatherEntity ->
+        forecastAdapter = ForecastAdapter { dayWeather: ModifiedWeatherEntity ->
             onChooseDayClicked(dayWeather)
         }
-        binding.forecastRecycler.adapter = fiveDayWeatherAdapter
+        binding.forecastRecycler.adapter = forecastAdapter
         binding.forecastRecycler.layoutManager = LinearLayoutManager(requireContext())
         weatherViewModel.noData.observe(viewLifecycleOwner) {
             binding.noDataTextView.text = it
@@ -46,7 +46,7 @@ class FiveDayWeatherFragment : Fragment() {
         weatherViewModel.fiveDaysForecast.observe(viewLifecycleOwner) { forecast ->
             binding.apply {
                 if (forecast != null) {
-                    fiveDayWeatherAdapter.setData(forecast)
+                    forecastAdapter.setData(forecast)
                 }
             }
         }

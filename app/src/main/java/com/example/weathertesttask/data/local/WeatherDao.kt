@@ -6,7 +6,7 @@ import androidx.room.Insert
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 @Dao
-interface DayWeatherDao {
+interface WeatherDao {
     @Query("SELECT * FROM modifiedWeatherEntity")
     fun getAll(): List<ModifiedWeatherEntity>
 

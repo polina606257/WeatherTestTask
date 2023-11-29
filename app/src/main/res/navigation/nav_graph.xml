@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fiveDayWeatherFragment"
-        android:name="com.example.weathertesttask.ui.homePage.FiveDayWeatherFragment"
+        android:name="com.example.weathertesttask.ui.homePage.ForecastFragment"
         android:label="FiveDayWeatherFragment" >
         <action
             android:id="@+id/action_fiveDayWeatherFragment_to_detailsFragment"

@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weathertesttask.databinding.ItemDayWeatherBinding
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
-class FiveDayWeatherAdapter(
+class ForecastAdapter(
     val onChooseDayClicked: (dayWeather: ModifiedWeatherEntity) -> Unit
-) : RecyclerView.Adapter<FiveDayWeatherAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
     private val weatherList: MutableList<ModifiedWeatherEntity> = mutableListOf()
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
