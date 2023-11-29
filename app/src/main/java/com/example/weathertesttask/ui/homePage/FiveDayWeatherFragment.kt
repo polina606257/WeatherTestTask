@@ -45,9 +45,16 @@ class FiveDayWeatherFragment : Fragment() {
 
         weatherViewModel.fiveDaysForecast.observe(viewLifecycleOwner) { forecast ->
             binding.apply {
-                fiveDayWeatherAdapter.setData(forecast)
+                if (forecast != null) {
+                    fiveDayWeatherAdapter.setData(forecast)
+                }
             }
         }
+
+        weatherViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
         checkLocationPermission()
     }
 

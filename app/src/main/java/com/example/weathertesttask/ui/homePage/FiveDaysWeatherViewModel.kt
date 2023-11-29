@@ -33,17 +33,20 @@ class FiveDaysWeatherViewModel(
     val saveDayWeatherToDatabaseUseCase: SaveDayWeatherToDatabaseUseCase,
     val connectionDetector: ConnectionDetector
 ) : ViewModel() {
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>>()
-    val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>> = _fiveDaysForecast
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>?>()
+    val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>?> = _fiveDaysForecast
     private val _noData = MutableLiveData("")
     val noData: LiveData<String> = _noData
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
 
     private var latitude: Double? = null
     private var longitude: Double? = null
 
     fun initViewModel(context: Context) {
         viewModelScope.launch {
+            _isLoading.value = true
             when (connectionDetector.isConnectingToInternet()) {
                 true -> {
                     fusedLocationProviderClient =
@@ -58,6 +61,7 @@ class FiveDaysWeatherViewModel(
                             .addOnSuccessListener(OnSuccessListener { location ->
                                 getLanAndLon(context, location, onLocationFound = {
                                     getAndSaveApiData()
+                                    _isLoading.value = false
                                 })
                             })
                     }
@@ -77,6 +81,7 @@ class FiveDaysWeatherViewModel(
                             Log.i("TAG", "Couldn't find any weather, error ${dataResult.error}")
                         }
                     }
+                    _isLoading.value = false
                 }
             }
         }
