@@ -34,8 +34,8 @@ class FiveDaysWeatherViewModel(
     val connectionDetector: ConnectionDetector
 ) : ViewModel() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>?>()
-    val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>?> = _fiveDaysForecast
+    private val _fiveDaysForecast = MutableLiveData<List<ModifiedWeatherEntity>>()
+    val fiveDaysForecast: MutableLiveData<List<ModifiedWeatherEntity>> = _fiveDaysForecast
     private val _noData = MutableLiveData("")
     val noData: LiveData<String> = _noData
 
@@ -46,8 +46,12 @@ class FiveDaysWeatherViewModel(
         viewModelScope.launch {
             when (connectionDetector.isConnectingToInternet()) {
                 true -> {
-                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    fusedLocationProviderClient =
+                        LocationServices.getFusedLocationProviderClient(context)
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
                         == PackageManager.PERMISSION_GRANTED
                     ) {
                         fusedLocationProviderClient.lastLocation
@@ -116,12 +120,4 @@ class FiveDaysWeatherViewModel(
             Log.d("TAG", "Couldn't get location")
         }
     }
-
-//    private fun askForPermission(activity: FragmentActivity, context: Context) {
-//        ActivityCompat.requestPermissions(
-//            activity,
-//            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-//            REQUEST_CODE
-//        )
-//    }
 }

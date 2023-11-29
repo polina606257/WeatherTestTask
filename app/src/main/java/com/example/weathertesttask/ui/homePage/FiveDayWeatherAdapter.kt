@@ -7,9 +7,9 @@ import com.example.weathertesttask.databinding.ItemDayWeatherBinding
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 class FiveDayWeatherAdapter(
-    val listHourlyDayWeather: List<ModifiedWeatherEntity>,
     val onChooseDayClicked: (dayWeather: ModifiedWeatherEntity) -> Unit
 ) : RecyclerView.Adapter<FiveDayWeatherAdapter.ViewHolder>() {
+    private val weatherList: MutableList<ModifiedWeatherEntity> = mutableListOf()
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemDayWeatherBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
@@ -22,10 +22,16 @@ class FiveDayWeatherAdapter(
         }
     }
 
-    override fun getItemCount() = listHourlyDayWeather.size
+    override fun getItemCount() = weatherList.size
+
+    fun setData(newData: List<ModifiedWeatherEntity>) {
+        weatherList.clear()
+        weatherList.addAll(newData)
+        notifyDataSetChanged()
+    }
 
     private fun getDayWeather(position: Int): ModifiedWeatherEntity {
-        return listHourlyDayWeather[position]
+        return weatherList[position]
     }
 
     inner class ViewHolder(val binding: ItemDayWeatherBinding) :

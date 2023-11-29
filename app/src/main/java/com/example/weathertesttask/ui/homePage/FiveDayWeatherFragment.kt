@@ -1,6 +1,5 @@
 package com.example.weathertesttask.ui.homePage
 
-import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
@@ -11,19 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.motion.widget.Debug.getLocation
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weathertesttask.Config.Companion.REQUEST_CODE_LOCATION
 import com.example.weathertesttask.R
 import com.example.weathertesttask.databinding.FragmentFiveDayWeatherBinding
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FiveDayWeatherFragment : Fragment() {
-    private lateinit var binding: FragmentFiveDayWeatherBinding
+    private var _binding: FragmentFiveDayWeatherBinding? = null
+    private val binding get() = _binding!!
     private val weatherViewModel by viewModel<FiveDaysWeatherViewModel>()
     private lateinit var fiveDayWeatherAdapter: FiveDayWeatherAdapter
 
@@ -31,29 +28,32 @@ class FiveDayWeatherFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFiveDayWeatherBinding.inflate(layoutInflater)
+        _binding = FragmentFiveDayWeatherBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkLocationPermission()
+        fiveDayWeatherAdapter = FiveDayWeatherAdapter { dayWeather: ModifiedWeatherEntity ->
+            onChooseDayClicked(dayWeather)
+        }
+        binding.forecastRecycler.adapter = fiveDayWeatherAdapter
+        binding.forecastRecycler.layoutManager = LinearLayoutManager(requireContext())
         weatherViewModel.noData.observe(viewLifecycleOwner) {
             binding.noDataTextView.text = it
         }
 
-        weatherViewModel.fiveDaysForecast.observe(viewLifecycleOwner) { weatherResponse ->
+        weatherViewModel.fiveDaysForecast.observe(viewLifecycleOwner) { forecast ->
             binding.apply {
-                if (weatherResponse != null) {
-                    fiveDayWeatherAdapter =
-                        FiveDayWeatherAdapter(weatherResponse) { dayWeather: ModifiedWeatherEntity ->
-                            onChooseDayClicked(dayWeather)
-                        }
-                    binding.forecastRecycler.adapter = fiveDayWeatherAdapter
-                    binding.forecastRecycler.layoutManager = LinearLayoutManager(requireContext())
-                }
+                fiveDayWeatherAdapter.setData(forecast)
             }
         }
+        checkLocationPermission()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun onChooseDayClicked(dayWeather: ModifiedWeatherEntity) {
@@ -71,17 +71,8 @@ class FiveDayWeatherFragment : Fragment() {
         ) {
             weatherViewModel.initViewModel(requireContext())
         } else {
-            requestLocationPermission()
+            requestPermission.launch(ACCESS_FINE_LOCATION)
         }
-    }
-
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(ACCESS_FINE_LOCATION),
-            REQUEST_CODE_LOCATION
-        )
-        requestPermission.launch(ACCESS_FINE_LOCATION)
     }
 
     private val requestPermission =

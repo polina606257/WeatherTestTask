@@ -6,16 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.weathertesttask.databinding.FragmentDetailsBinding
+import com.example.weathertesttask.databinding.FragmentFiveDayWeatherBinding
 import com.example.weathertesttask.domain.ModifiedWeatherEntity
 
 class DetailsFragment : Fragment() {
-    private lateinit var binding: FragmentDetailsBinding
+    private var _binding: FragmentDetailsBinding?= null
+    private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDetailsBinding.inflate(layoutInflater)
+        _binding = FragmentDetailsBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -23,6 +26,11 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val dayWeather = arguments?.getSerializable("dayWeather") as ModifiedWeatherEntity
         bindFields(dayWeather)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
     private fun bindFields(dayWeather: ModifiedWeatherEntity) {
         binding.dateValue.text = dayWeather.dtTxt
